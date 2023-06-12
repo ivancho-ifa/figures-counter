@@ -81,7 +81,7 @@ int count_figures(int rows, int cols, std::istream& data) {
 				const unsigned up_cell_figure = prev_row[col];
 
 				if (left_cell_figure == EMPTY_FIGURE_ID && up_cell_figure == EMPTY_FIGURE_ID) { ///< Both are empty
-					const unsigned figure_id = figure_ids.size();
+					const unsigned figure_id = static_cast<unsigned>(figure_ids.size());
 					figure_ids.push_back(figure_id);
 					current_row.push_back(left_cell_figure = figure_id);
 				} else if (left_cell_figure == up_cell_figure) { ///< Both are part of the same figure
@@ -106,7 +106,8 @@ int count_figures(int rows, int cols, std::istream& data) {
 	}
 
 	std::sort(std::begin(figure_ids), std::end(figure_ids));
-	const int figures_count = std::unique(std::begin(figure_ids), std::end(figure_ids)) - std::begin(figure_ids);
+	const int figures_count =
+		static_cast<int>(std::unique(std::begin(figure_ids), std::end(figure_ids)) - std::begin(figure_ids));
 	return figures_count;
 }
 
