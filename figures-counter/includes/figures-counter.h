@@ -22,7 +22,15 @@ enum class Cell : char {
 	Figure = '*'
 };
 
+/**
+ * @return Whether @p rhs underlying implementation value is @p lhs
+ */
+
 bool operator==(char lhs, Cell rhs) noexcept;
+
+/**
+ * @brief The figure ID for background used when determining neighbor figure IDs.
+ */
 
 constexpr unsigned EMPTY_FIGURE_ID = UINT_MAX;
 
@@ -38,11 +46,17 @@ constexpr unsigned EMPTY_FIGURE_ID = UINT_MAX;
  * | * |          | * |
  * |   |          |   |
  *
- * @param rows Rows in the table
- * @param cols Columns in the table
- * @param data Contents of the table, formatted in @p rows rows with length @p cols
+ * @param rows Rows in the table. A positive integer.
+ * @param cols Columns in the table. A positive integer.
+ * @param data Contents of the table, formatted in @p rows rows with length @p cols. A readable data stream holding @p
+ * rows new line separated rows with @p cols length each.
  *
  * @return The number of figures in the input.
+ *
+ * @throws error::row_count_error If @p rows is bigger than the actual rows in @p data
+ * @throws error::row_length_error If one of the rows length differs from @p cols
+ * @throws error::unrecognized_symbol If a symbol from @p data is different from the ones defined in @p Cell
+ * @throws error::bad_input If any of the input parameters is not in the described format
  */
 
 int count_figures(int rows, int cols, std::istream& data);
