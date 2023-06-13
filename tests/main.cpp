@@ -89,14 +89,14 @@ BOOST_AUTO_TEST_CASE(InvalidRowCount) {
 	const std::string m = "*\n";
 	std::stringstream m_stream(m);
 
-	BOOST_REQUIRE_THROW(figures_counter::count_figures(-1, 1, m_stream), figures_counter::error::bad_input);
+	BOOST_REQUIRE_THROW(figures_counter::count_figures(0, 1, m_stream), figures_counter::error::bad_input);
 }
 
 BOOST_AUTO_TEST_CASE(InvalidColCount) {
 	const std::string m = "*\n";
 	std::stringstream m_stream(m);
 
-	BOOST_REQUIRE_THROW(figures_counter::count_figures(1, -1, m_stream), figures_counter::error::bad_input);
+	BOOST_REQUIRE_THROW(figures_counter::count_figures(1, 0, m_stream), figures_counter::error::bad_input);
 }
 
 BOOST_AUTO_TEST_CASE(InvalidData) {

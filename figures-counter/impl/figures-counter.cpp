@@ -19,7 +19,7 @@ bool operator==(char lhs, Cell rhs) noexcept {
 	return lhs == static_cast<char>(rhs);
 }
 
-int count_figures(int rows, int cols, std::istream& data) {
+int count_figures(size_t rows, size_t cols, std::istream& data) {
 	if (rows <= 0) {
 		throw error::bad_input("rows must be positive");
 	}

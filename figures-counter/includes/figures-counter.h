@@ -59,6 +59,6 @@ constexpr unsigned EMPTY_FIGURE_ID = UINT_MAX;
  * @throws error::bad_input If any of the input parameters is not in the described format
  */
 
-int count_figures(int rows, int cols, std::istream& data);
+int count_figures(size_t rows, size_t cols, std::istream& data);
 
 } // namespace figures_counter
