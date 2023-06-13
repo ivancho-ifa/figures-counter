@@ -23,6 +23,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Install dependencies
+      run: vcpkg install
+
     - name: Integrate vcpkg
       run: vcpkg integrate install
 
