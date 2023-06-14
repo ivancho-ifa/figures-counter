@@ -32,7 +32,7 @@ jobs:
         cache-name: cache-vcpkg-packages
       with:
         path: ${{github.workspace}}/out/build/${{matrix.arch}}-${{env.BUILD_TYPE}}/vcpkg_installed
-        key: ${{matrix.os}}-${{matrix.arch}}-${{env.BUILD_TYPE}}-build-${{env.cache-name}}-${{hashFiles(**/vcpkg.json)}}
+        key: ${{matrix.os}}-${{matrix.arch}}-${{env.BUILD_TYPE}}-build-${{env.cache-name}}-${{hashFiles("**/vcpkg.json")}}
 
     - name: Check cl
       run: Get-ChildItem -Path C:\ -Include cl.exe -File -Recurse -ErrorAction SilentlyContinue
