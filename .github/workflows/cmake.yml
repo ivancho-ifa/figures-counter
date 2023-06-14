@@ -32,7 +32,7 @@ jobs:
       run: vcpkg integrate install
 
     - name: Which vcpkg
-      run: where vcpkg
+      run: where.exe vcpkg
 
     - name: Configure CMake
       run: cmake --preset ${{matrix.arch}}-${{env.BUILD_TYPE}}
