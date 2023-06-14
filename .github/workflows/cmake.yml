@@ -9,7 +9,7 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: release
-  VCPKG_ROOT: dunno
+  VCPKG_ROOT: C:\vcpkg\
 
 jobs:
   build:
@@ -25,14 +25,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    # - name: Install dependencies
-    #   run: vcpkg install
-
     - name: Integrate vcpkg
       run: vcpkg integrate install
-
-    - name: Which vcpkg
-      run: where.exe vcpkg
 
     - name: Configure CMake
       run: cmake --preset ${{matrix.arch}}-${{env.BUILD_TYPE}}
