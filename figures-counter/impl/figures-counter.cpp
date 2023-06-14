@@ -15,6 +15,12 @@
 
 namespace figures_counter {
 
+/**
+ * @brief The figure ID for background used when determining neighbor figure IDs.
+ */
+
+constexpr unsigned EMPTY_FIGURE_ID = UINT_MAX;
+
 bool operator==(char lhs, Cell rhs) noexcept {
 	return lhs == static_cast<char>(rhs);
 }

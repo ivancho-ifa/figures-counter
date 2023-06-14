@@ -29,12 +29,6 @@ enum class Cell : char {
 bool operator==(char lhs, Cell rhs) noexcept;
 
 /**
- * @brief The figure ID for background used when determining neighbor figure IDs.
- */
-
-constexpr unsigned EMPTY_FIGURE_ID = UINT_MAX;
-
-/**
  * @brief Returns the number of figures in @p data
  *
  * The input is a table with the contents of @p data, formatted in size @p rows by @p cols. The table's contents @p data
