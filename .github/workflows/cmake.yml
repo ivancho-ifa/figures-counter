@@ -27,25 +27,16 @@ jobs:
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: ${{matrix.arch}}
-    
-    - name: Cache dependencies
-      id: cache-vcpkg
+        
+    - name: Cache Dependencies
+      id: cache-deps
       uses: actions/cache@v3
-      env:
-        cache-name: cache-vcpkg-packages
       with:
         path: ${{github.workspace}}/out/build/${{matrix.arch}}-${{env.BUILD_TYPE}}/vcpkg_installed
         key: ${{matrix.os}}-${{matrix.arch}}-${{env.BUILD_TYPE}}-build-${{env.cache-name}}-${{hashFiles('**/vcpkg.json')}}
+        enableCrossOsArchive: true
+        fail-on-cache-miss: true
     
-    #- name: Set the value
-    #  run: echo "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        
-    #- name: Set-up dev env
-    #  run: vcvarsall.bat ${{matrix.arch}}
-
-    #- name: Check cl
-    #  run: Get-ChildItem -Path C:\ -Include cl.exe -File -Recurse -ErrorAction SilentlyContinue
-
     - name: Integrate vcpkg
       run: vcpkg integrate install
 
