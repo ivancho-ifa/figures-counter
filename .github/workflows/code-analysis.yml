@@ -1,4 +1,4 @@
-name: CMake
+name: Code Analysis
 
 on:
   push:
@@ -46,7 +46,7 @@ jobs:
           cmakeBuildDirectory: ${{ env.BUILD_DIR }}
           buildConfiguration: ${{ env.BUILD_CONFIG }}
           ruleset: NativeRecommendedRules.ruleset
-          ignoredPaths: ${{ github.workspace }}/out;${{ github.workspace }}/tests
+          ignoredPaths: ${{ github.workspace }}/out/build/${{matrix.arch}}-${{env.BUILD_TYPE}}/vcpkg_installed;${{ github.workspace }}/tests
 
     - name: Upload SARIF to GitHub
       uses: github/codeql-action/upload-sarif@v2
