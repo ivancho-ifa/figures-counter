@@ -33,9 +33,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{github.workspace}}/out/build/${{matrix.arch}}-${{env.BUILD_TYPE}}/vcpkg_installed
-        key: ${{matrix.os}}-${{matrix.arch}}-${{env.BUILD_TYPE}}-build-${{env.cache-name}}-${{hashFiles('**/vcpkg.json')}}
+        key: ${{matrix.os}}-${{matrix.arch}}-${{env.BUILD_TYPE}}-${{hashFiles('**/vcpkg.json')}}
         enableCrossOsArchive: true
-        fail-on-cache-miss: true
     
     - name: Integrate vcpkg
       run: vcpkg integrate install
