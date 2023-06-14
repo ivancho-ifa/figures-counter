@@ -43,7 +43,6 @@ jobs:
       run: cmake --preset ${{matrix.arch}}-${{env.BUILD_TYPE}}
 
     - name: Build
-      working-directory: ${{github.workspace}}/out/build/
       run: cmake --build --preset ${{matrix.arch}}-${{env.BUILD_TYPE}}
 
     - name: Test
