@@ -24,6 +24,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Cache dependencies
+      id: cache-vcpkg
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-vcpkg-packages
+      with:
+        path: ${{github.workspace}}/out/build/${{matrix.arch}}-${{env.BUILD_TYPE}}/vcpkg_installed
+        key: ${{ matrix.os }}-${{matrix.arch}}-${{env.BUILD_TYPE}}-build-${{ env.cache-name }}
 
     - name: Integrate vcpkg
       run: vcpkg integrate install
