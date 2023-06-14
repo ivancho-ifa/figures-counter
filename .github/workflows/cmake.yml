@@ -10,7 +10,6 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: release
   VCPKG_ROOT: C:\vcpkg\
-  VCVARSALL: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
 
 jobs:
   build:
@@ -34,8 +33,14 @@ jobs:
       with:
         path: ${{github.workspace}}/out/build/${{matrix.arch}}-${{env.BUILD_TYPE}}/vcpkg_installed
         key: ${{matrix.os}}-${{matrix.arch}}-${{env.BUILD_TYPE}}-build-${{env.cache-name}}-${{hashFiles('**/vcpkg.json')}}
+    
+    - name: Set the value
+      run: |
+        echo "PATH=" >> "$GITHUB_ENV"
         
     - name: Set-up dev env
+      env:
+          VCVARSALL: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
       run: ${{VCVARSALL}} ${{matrix.arch}}
 
     #- name: Check cl
