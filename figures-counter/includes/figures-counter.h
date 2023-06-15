@@ -1,15 +1,6 @@
 ﻿#pragma once
 
-#include "error.h"
-
-#include <algorithm>
-#include <cassert>
 #include <istream>
-#include <limits.h>
-#include <memory>
-#include <optional>
-#include <string>
-#include <vector>
 
 namespace figures_counter {
 

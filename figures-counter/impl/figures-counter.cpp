@@ -1,15 +1,13 @@
+#include <error.h>
 #include <figures-counter.h>
 
-#pragma once
-
-#include "error.h"
+#include <line_loader.h>
 
 #include <algorithm>
 #include <cassert>
 #include <istream>
 #include <limits.h>
 #include <memory>
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -26,18 +24,7 @@ bool operator==(char lhs, Cell rhs) noexcept {
 }
 
 int count_figures(size_t rows, size_t cols, std::istream& data) {
-	if (rows <= 0) {
-		throw error::bad_input("rows must be positive");
-	}
-	if (cols <= 0) {
-		throw error::bad_input("cols must be positive");
-	}
-	if (!data) {
-		throw error::bad_input("data stream can not be read");
-	}
-
-	std::string buffer;
-	buffer.reserve(cols);
+	line_loader stream(data, rows, cols);
 
 	std::vector<unsigned> prev_row;
 	prev_row.reserve(cols);
@@ -46,22 +33,11 @@ int count_figures(size_t rows, size_t cols, std::istream& data) {
 
 	std::vector<unsigned> figure_ids;
 
-	const auto load_next_row = [&]() -> std::istream& {
+	std::string_view buffer;
+	while (stream.not_finished()) {
 		std::swap(current_row, prev_row);
 		current_row.clear();
-
-		std::getline(data, buffer);
-		return data;
-	};
-
-	for (size_t row = 0; row < rows; ++row) {
-		load_next_row();
-		if (!data) {
-			throw error::row_count_error(row, rows);
-		}
-		if (buffer.size() != cols) {
-			throw error::row_length_error(row, buffer.size() - 1, cols);
-		}
+		buffer = stream.load_line();
 
 		// Cache the left cell in to skip check whether the current cell is 0
 		unsigned left_cell_figure = EMPTY_FIGURE_ID;
@@ -89,7 +65,7 @@ int count_figures(size_t rows, size_t cols, std::istream& data) {
 					current_row.push_back(left_cell_figure = sorted.first);
 				}
 			} else [[unlikely]] {
-				throw error::unrecognized_symbol(row, col, cell);
+				throw error::unrecognized_symbol(stream.lines_loaded(), col, cell);
 			}
 		}
 	}
@@ -98,7 +74,6 @@ int count_figures(size_t rows, size_t cols, std::istream& data) {
 	const auto unique_ids_end = std::unique(std::begin(figure_ids), std::end(figure_ids));
 
 	const int figures_count = static_cast<int>(unique_ids_end - std::begin(figure_ids));
-	assert(figures_count > 0);
 	return figures_count;
 }
 

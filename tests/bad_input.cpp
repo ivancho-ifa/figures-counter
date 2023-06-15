@@ -1,3 +1,4 @@
+#include <error.h>
 #include <figures-counter.h>
 
 #include <boost/test/unit_test.hpp>
