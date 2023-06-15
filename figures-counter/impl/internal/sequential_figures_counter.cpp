@@ -63,6 +63,7 @@ unsigned sequential_figures_counter::get_figure_id_from_neighbors(unsigned left_
 	}
 }
 
+
 size_t sequential_figures_counter::count_unique_figure_ids() {
 	std::sort(std::begin(figure_ids), std::end(figure_ids));
 	const auto unique_ids_end = std::unique(std::begin(figure_ids), std::end(figure_ids));
