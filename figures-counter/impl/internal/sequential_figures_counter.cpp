@@ -16,7 +16,7 @@ sequential_figures_counter::sequential_figures_counter(size_t rows, size_t cols,
 size_t sequential_figures_counter::count_figures() {
 	while (lines_stream.not_finished()) {
 		std::swap(current_line, prev_line);
-		        current_line.clear();
+		current_line.clear();
 		std::string_view buffer = lines_stream.load_line();
 
 		assign_figure_ids_for_line(buffer);
@@ -62,6 +62,7 @@ unsigned sequential_figures_counter::get_figure_id_from_neighbors(unsigned left_
 		return sorted.first;
 	}
 }
+
 
 size_t sequential_figures_counter::count_unique_figure_ids() {
 	std::sort(std::begin(figure_ids), std::end(figure_ids));
