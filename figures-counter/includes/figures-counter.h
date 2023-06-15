@@ -36,6 +36,9 @@ bool operator==(char lhs, Cell rhs) noexcept;
  * @param data Contents of the table, formatted in @p rows rows with length @p cols. A readable data stream holding @p
  * rows new line separated rows with @p cols length each.
  *
+ * @warning Modifying the object referenced by @p data before this method finishes execution will cause undefined
+ * behavior.
+ *
  * @return The number of figures in the input.
  *
  * @throws error::row_count_error If @p rows is bigger than the actual rows in @p data
