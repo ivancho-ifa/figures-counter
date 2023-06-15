@@ -23,7 +23,15 @@ bool operator==(char lhs, Cell rhs) noexcept {
 	return lhs == static_cast<char>(rhs);
 }
 
-int count_figures(size_t rows, size_t cols, std::istream& data) {
+size_t count_unique(std::vector<unsigned>& numbers) {
+	std::sort(std::begin(numbers), std::end(numbers));
+	const auto unique_ids_end = std::unique(std::begin(numbers), std::end(numbers));
+
+	const size_t figures_count = unique_ids_end - std::begin(numbers);
+	return figures_count;
+}
+
+size_t count_figures(size_t rows, size_t cols, std::istream& data) {
 	line_loader stream(data, rows, cols);
 
 	std::vector<unsigned> prev_row;
@@ -70,11 +78,7 @@ int count_figures(size_t rows, size_t cols, std::istream& data) {
 		}
 	}
 
-	std::sort(std::begin(figure_ids), std::end(figure_ids));
-	const auto unique_ids_end = std::unique(std::begin(figure_ids), std::end(figure_ids));
-
-	const int figures_count = static_cast<int>(unique_ids_end - std::begin(figure_ids));
-	return figures_count;
+	return count_unique(figure_ids);
 }
 
 } // namespace figures_counter

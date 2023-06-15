@@ -44,6 +44,6 @@ bool operator==(char lhs, Cell rhs) noexcept;
  * @throws error::bad_input If any of the input parameters is not in the described format
  */
 
-int count_figures(size_t rows, size_t cols, std::istream& data);
+size_t count_figures(size_t rows, size_t cols, std::istream& data);
 
 } // namespace figures_counter
