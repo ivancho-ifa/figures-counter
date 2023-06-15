@@ -1,0 +1,55 @@
+name: Code Analysis
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  BUILD_TYPE: debug
+  BUILD_CONFIG: 'Debug'
+  BUILD_DIR: '${{ github.workspace }}/out/build'
+
+jobs:
+  analyze:
+    strategy:
+      matrix:
+        os: [windows-latest]
+        arch: [x64]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: ${{matrix.arch}}
+        
+    - name: Cache Dependencies
+      id: cache-deps
+      uses: actions/cache@v3
+      with:
+        path: ${{github.workspace}}/out/build/${{matrix.arch}}-${{env.BUILD_TYPE}}/vcpkg_installed
+        key: ${{matrix.os}}-${{matrix.arch}}-${{env.BUILD_TYPE}}-${{hashFiles('**/vcpkg.json')}}
+        enableCrossOsArchive: true
+    
+    - name: Integrate vcpkg
+      run: vcpkg integrate install
+
+    - name: Configure CMake
+      run: cmake --preset ${{matrix.arch}}-${{env.BUILD_TYPE}}
+
+    - name: Run clang-tidy and clang-format 
+      uses: cpp-linter/cpp-linter-action@v2
+      id: linter
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+          style: file
+      
+    - name: Fail fast?!
+      if: steps.linter.outputs.checks-failed > 0
+      run: |
+          echo "Some files failed the linting checks!"
+      # for actual deployment
+      # run: exit 1
