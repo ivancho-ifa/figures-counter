@@ -24,7 +24,7 @@ line_loader::line_loader(std::istream& stream, size_t lines_count, size_t line_l
 
 std::string_view line_loader::load_line() {
 	std::getline(_stream, _buffer);
-	if (!_stream && _lines_loaded < _lines_count) [[unlikely]] {
+	if (!_stream) [[unlikely]] {
 		throw error::row_count_error(_lines_loaded, _lines_count);
 	}
 	if (_buffer.size() != _line_length) [[unlikely]] {
@@ -41,6 +41,5 @@ size_t line_loader::lines_loaded() const noexcept {
 bool line_loader::not_finished() const {
 	return _lines_loaded < _lines_count;
 }
-
 
 } // namespace figures_counter
