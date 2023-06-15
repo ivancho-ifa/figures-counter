@@ -1,4 +1,4 @@
-name: Code Analysis
+name: clang-tidy and clang-format
 
 on:
   push:
@@ -51,5 +51,4 @@ jobs:
       if: steps.linter.outputs.checks-failed > 0
       run: |
           echo "Some files failed the linting checks!"
-      # for actual deployment
-      # run: exit 1
+          exit 1
