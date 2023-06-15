@@ -47,7 +47,7 @@ void sequential_figures_counter::assign_figure_ids_for_line(std::string_view buf
 
 unsigned sequential_figures_counter::get_figure_id_from_neighbors(unsigned left_cell, unsigned up_cell) {
 	// Both are empty
-	if (left_cell == EMPTY_FIGURE_ID && up_cell == EMPTY_FIGURE_ID) { 
+	if (left_cell == EMPTY_FIGURE_ID && up_cell == EMPTY_FIGURE_ID) {
 		const auto figure_id = static_cast<unsigned>(figure_ids.size());
 		figure_ids.push_back(figure_id);
 
@@ -55,7 +55,7 @@ unsigned sequential_figures_counter::get_figure_id_from_neighbors(unsigned left_
 	}
 
 	// Both are part of the same figure
-	if (left_cell == up_cell) { 
+	if (left_cell == up_cell) {
 		return left_cell;
 	}
 
