@@ -47,6 +47,8 @@ jobs:
       with:
           style: file
           database: ${{github.workspace}}/out/build/${{matrix.arch}}-${{env.BUILD_TYPE}}
+          thread-comments: true
+          step-summary: true
       
     - name: Fail fast?!
       if: steps.linter.outputs.checks-failed > 0
