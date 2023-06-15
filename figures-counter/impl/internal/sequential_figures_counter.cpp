@@ -17,7 +17,7 @@ size_t sequential_figures_counter::count_figures() {
 	while (lines_stream.not_finished()) {
 		std::swap(current_line, prev_line);
 		current_line.clear();
-		std::string_view buffer = lines_stream.load_line();
+		const std::string_view buffer = lines_stream.load_line();
 
 		assign_figure_ids_for_line(buffer);
 	}
@@ -46,23 +46,27 @@ void sequential_figures_counter::assign_figure_ids_for_line(std::string_view buf
 }
 
 unsigned sequential_figures_counter::get_figure_id_from_neighbors(unsigned left_cell, unsigned up_cell) {
-	if (left_cell == EMPTY_FIGURE_ID && up_cell == EMPTY_FIGURE_ID) { ///< Both are empty
-		const unsigned figure_id = static_cast<unsigned>(figure_ids.size());
+	// Both are empty
+	if (left_cell == EMPTY_FIGURE_ID && up_cell == EMPTY_FIGURE_ID) { 
+		const auto figure_id = static_cast<unsigned>(figure_ids.size());
 		figure_ids.push_back(figure_id);
 
 		return figure_id;
-	} else if (left_cell == up_cell) { ///< Both are part of the same figure
-		return left_cell;
-	} else { ///< They differ
-		const auto sorted = std::minmax(left_cell, up_cell);
-		if (left_cell != EMPTY_FIGURE_ID && up_cell != EMPTY_FIGURE_ID) {
-			figure_ids[sorted.second] = figure_ids[sorted.first];
-		}
-
-		return sorted.first;
 	}
-}
 
+	// Both are part of the same figure
+	if (left_cell == up_cell) { 
+		return left_cell;
+	}
+
+	// They differ
+	const auto sorted = std::minmax(left_cell, up_cell);
+	if (left_cell != EMPTY_FIGURE_ID && up_cell != EMPTY_FIGURE_ID) {
+		figure_ids[sorted.second] = figure_ids[sorted.first];
+	}
+
+	return sorted.first;
+}
 
 size_t sequential_figures_counter::count_unique_figure_ids() {
 	std::sort(std::begin(figure_ids), std::end(figure_ids));
