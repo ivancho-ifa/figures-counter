@@ -1,6 +1,6 @@
 Checks: >
   -modernize-use-trailing-return-type,
-  -clang-diagnostic-error,
+  -clang-diagnostic-error
 
 # Turn all the warnings from the checks above into errors.
 WarningsAsErrors: "*"
