@@ -1,15 +1,6 @@
 ﻿#pragma once
 
-#include "error.h"
-
-#include <algorithm>
-#include <cassert>
 #include <istream>
-#include <limits.h>
-#include <memory>
-#include <optional>
-#include <string>
-#include <vector>
 
 namespace figures_counter {
 
@@ -29,12 +20,6 @@ enum class Cell : char {
 bool operator==(char lhs, Cell rhs) noexcept;
 
 /**
- * @brief The figure ID for background used when determining neighbor figure IDs.
- */
-
-constexpr unsigned EMPTY_FIGURE_ID = UINT_MAX;
-
-/**
  * @brief Returns the number of figures in @p data
  *
  * The input is a table with the contents of @p data, formatted in size @p rows by @p cols. The table's contents @p data
@@ -51,6 +36,9 @@ constexpr unsigned EMPTY_FIGURE_ID = UINT_MAX;
  * @param data Contents of the table, formatted in @p rows rows with length @p cols. A readable data stream holding @p
  * rows new line separated rows with @p cols length each.
  *
+ * @warning Modifying the object referenced by @p data before this method finishes execution will cause undefined
+ * behavior.
+ *
  * @return The number of figures in the input.
  *
  * @throws error::row_count_error If @p rows is bigger than the actual rows in @p data
@@ -59,6 +47,6 @@ constexpr unsigned EMPTY_FIGURE_ID = UINT_MAX;
  * @throws error::bad_input If any of the input parameters is not in the described format
  */
 
-int count_figures(size_t rows, size_t cols, std::istream& data);
+size_t count_figures(size_t rows, size_t cols, std::istream& data);
 
 } // namespace figures_counter
