@@ -7,8 +7,6 @@ on:
     branches: [ "master" ]
 
 env:
-  BUILD_TYPE: debug
-  BUILD_CONFIG: 'Debug'
   BUILD_DIR: '${{ github.workspace }}/out/build'
 
 jobs:
@@ -17,7 +15,12 @@ jobs:
       matrix:
         os: [windows-latest]
         arch: [x64]
+        compiler: [cl]
+        build_type: ['debug']
     runs-on: ${{ matrix.os }}
+
+    env:
+      preset: ${{matrix.compiler}}-${{matrix.arch}}-${{env.build_type}}
 
     steps:
     - uses: actions/checkout@v3
@@ -29,15 +32,15 @@ jobs:
       id: cache-deps
       uses: actions/cache@v3
       with:
-        path: ${{github.workspace}}/out/build/${{matrix.arch}}-${{env.BUILD_TYPE}}/vcpkg_installed
-        key: ${{matrix.os}}-${{matrix.arch}}-${{env.BUILD_TYPE}}-${{hashFiles('**/vcpkg.json')}}
+        path: ${{github.workspace}}/out/build/${{env.preset}}/vcpkg_installed
+        key: ${{matrix.os}}-${{env.preset}}-${{hashFiles('**/vcpkg.json')}}
         enableCrossOsArchive: true
     
     - name: Integrate vcpkg
       run: vcpkg integrate install
 
     - name: Configure CMake
-      run: cmake --preset ${{matrix.arch}}-${{env.BUILD_TYPE}}
+      run: cmake --preset ${{env.preset}}
 
     - name: Run clang-tidy and clang-format 
       uses: cpp-linter/cpp-linter-action@v2
@@ -47,7 +50,7 @@ jobs:
       with:
         version: 15
         style: file
-        database: out/build/${{matrix.arch}}-${{env.BUILD_TYPE}}
+        database: out/build/${{env.preset}}
         thread-comments: true
         step-summary: true
         tidy-checks: ''
