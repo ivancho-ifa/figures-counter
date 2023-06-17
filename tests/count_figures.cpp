@@ -48,15 +48,15 @@ BOOST_AUTO_TEST_CASE(CircularFigureWithRetractions) {
 }
 
 BOOST_AUTO_TEST_CASE(BigFigureSparsed) {
-	const unsigned rows = 1000;
-	const unsigned cols = 1000;
-	const unsigned figures_count = rows * cols / 4;
+	const size_t rows = 1000;
+	const size_t cols = 1000;
+	const size_t figures_count = rows * cols / 4;
 
 	std::string m;
-	for (auto row = 0; row < rows; ++row) {
+	for (size_t row = 0; row < rows; ++row) {
 		std::string m_row;
 		if (row % 2 == 0) {
-			for (auto col = 0; col < cols; ++col) {
+			for (size_t col = 0; col < cols; ++col) {
 				m_row +=
 					static_cast<char>(col % 2 == 0 ? figures_counter::Cell::Figure : figures_counter::Cell::Background);
 			}

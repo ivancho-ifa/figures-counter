@@ -1,4 +1,4 @@
-name: CMake
+name: Build and test
 
 on:
   push:
@@ -7,16 +7,20 @@ on:
     branches: [ "master" ]
 
 env:
-  BUILD_TYPE: release
   VCPKG_ROOT: C:\vcpkg\
 
 jobs:
-  build:
+  test:
     strategy:
       matrix:
         os: [windows-latest]
         arch: [x64]
+        compiler: [cl, clang-cl]
+        build_type: [debug, release]
     runs-on: ${{ matrix.os }}
+
+    env:
+      preset: ${{matrix.compiler}}-${{matrix.arch}}-${{env.build_type}}
 
     steps:
     - uses: actions/checkout@v3
@@ -28,18 +32,18 @@ jobs:
       id: cache-deps
       uses: actions/cache@v3
       with:
-        path: ${{github.workspace}}/out/build/${{matrix.arch}}-${{env.BUILD_TYPE}}/vcpkg_installed
-        key: ${{matrix.os}}-${{matrix.arch}}-${{env.BUILD_TYPE}}-${{hashFiles('**/vcpkg.json')}}
+        path: ${{github.workspace}}/out/build/${{env.preset}}/vcpkg_installed
+        key: ${{matrix.os}}-${{env.preset}}-${{hashFiles('**/vcpkg.json')}}
         enableCrossOsArchive: true
     
     - name: Integrate vcpkg
       run: vcpkg integrate install
 
     - name: Configure CMake
-      run: cmake --preset ${{matrix.arch}}-${{env.BUILD_TYPE}}
+      run: cmake --preset ${{env.preset}}
 
     - name: Build
-      run: cmake --build --preset ${{matrix.arch}}-${{env.BUILD_TYPE}}
+      run: cmake --build --preset ${{env.preset}}
 
     - name: Test
-      run: ctest --preset ${{matrix.arch}}-${{env.BUILD_TYPE}}
+      run: ctest --preset ${{env.preset}}
