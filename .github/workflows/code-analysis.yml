@@ -6,11 +6,6 @@ on:
   pull_request:
     branches: [ "master" ]
 
-env:
-  BUILD_TYPE: debug
-  BUILD_CONFIG: 'Debug'
-  BUILD_DIR: '${{ github.workspace }}/out/build'
-
 jobs:
   analyze:
     strategy:
@@ -20,8 +15,11 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      preset: ${{matrix.compiler}}-${{matrix.arch}}-${{env.BUILD_TYPE}}
+      build_type: debug
+      build_config: 'Debug'
+      preset: ${{matrix.compiler}}-${{matrix.arch}}-${{env.build_type}}
       shared_dependency_cache: ${{matrix.os}}-${{matrix.arch}}
+      build_dir: ${{env.BUILD_DIR}}/${{env.preset}}/
 
     steps:
     - uses: actions/checkout@v3
@@ -47,8 +45,8 @@ jobs:
       uses: microsoft/msvc-code-analysis-action@v0.1.1
       id: run-analysis
       with:
-          cmakeBuildDirectory: ${{env.BUILD_DIR}}/${{env.preset}}/
-          buildConfiguration: ${{env.BUILD_CONFIG}}
+          cmakeBuildDirectory: ${{env.build_dir}}
+          buildConfiguration: ${{env.build_config}}
           ruleset: NativeRecommendedRules.ruleset
           ignoredPaths: ${{ github.workspace }}/out/build/${{env.preset}}/vcpkg_installed;${{ github.workspace }}/tests
 
