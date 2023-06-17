@@ -19,7 +19,7 @@ jobs:
       build_config: 'Debug'
       preset: ${{matrix.compiler}}-${{matrix.arch}}-${{env.build_type}}
       shared_dependency_cache: ${{matrix.os}}-${{matrix.arch}}
-      build_dir: ${{env.BUILD_DIR}}/${{env.preset}}/
+      build_dir: ${{github.workspace}}/out/build/${{env.preset}}/
 
     steps:
     - uses: actions/checkout@v3
@@ -31,7 +31,7 @@ jobs:
       id: cache-deps
       uses: actions/cache@v3
       with:
-        path: ${{github.workspace}}/out/build/${{env.preset}}/vcpkg_installed
+        path: ${{env.build_dir}}/vcpkg_installed
         key: ${{env.shared_dependency_cache}}-${{hashFiles('**/vcpkg.json')}}
         enableCrossOsArchive: true
     
@@ -48,7 +48,7 @@ jobs:
           cmakeBuildDirectory: ${{env.build_dir}}
           buildConfiguration: ${{env.build_config}}
           ruleset: NativeRecommendedRules.ruleset
-          ignoredPaths: ${{ github.workspace }}/out/build/${{env.preset}}/vcpkg_installed;${{ github.workspace }}/tests
+          ignoredPaths: ${{env.build_dir}}/vcpkg_installed;${{ github.workspace }}/tests
 
     - name: Upload SARIF to GitHub
       uses: github/codeql-action/upload-sarif@v2
