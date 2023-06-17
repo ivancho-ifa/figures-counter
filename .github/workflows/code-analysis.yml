@@ -21,6 +21,7 @@ jobs:
 
     env:
       preset: ${{matrix.compiler}}-${{matrix.arch}}-${{env.BUILD_TYPE}}
+      shared_dependency_cache: ${{matrix.arch}}-${{env.build_type}}
 
     steps:
     - uses: actions/checkout@v3
@@ -32,24 +33,24 @@ jobs:
       id: cache-deps
       uses: actions/cache@v3
       with:
-        path: ${{github.workspace}}/out/build/${{env.preset}}/vcpkg_installed
-        key: ${{matrix.os}}-${{env.preset}}-${{hashFiles('**/vcpkg.json')}}
+        path: ${{github.workspace}}/out/build/${preset}/vcpkg_installed
+        key: ${{matrix.os}}-${shared_dependency_cache}-${{hashFiles('**/vcpkg.json')}}
         enableCrossOsArchive: true
     
     - name: Integrate vcpkg
       run: vcpkg integrate install
 
     - name: Configure CMake
-      run: cmake --preset ${{env.preset}}
+      run: cmake --preset ${preset}
 
     - name: Run MSVC Code Analysis
       uses: microsoft/msvc-code-analysis-action@v0.1.1
       id: run-analysis
       with:
-          cmakeBuildDirectory: ${{ env.BUILD_DIR }}/${{env.preset}}/
+          cmakeBuildDirectory: ${{ env.BUILD_DIR }}/${preset}/
           buildConfiguration: ${{ env.BUILD_CONFIG }}
           ruleset: NativeRecommendedRules.ruleset
-          ignoredPaths: ${{ github.workspace }}/out/build/${{env.preset}}/vcpkg_installed;${{ github.workspace }}/tests
+          ignoredPaths: ${{ github.workspace }}/out/build/${preset}/vcpkg_installed;${{ github.workspace }}/tests
 
     - name: Upload SARIF to GitHub
       uses: github/codeql-action/upload-sarif@v2

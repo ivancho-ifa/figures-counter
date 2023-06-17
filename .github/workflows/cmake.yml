@@ -21,6 +21,7 @@ jobs:
 
     env:
       preset: ${{matrix.compiler}}-${{matrix.arch}}-${{env.build_type}}
+      shared_dependency_cache: ${{matrix.arch}}-${{env.build_type}}
 
     steps:
     - uses: actions/checkout@v3
@@ -32,18 +33,18 @@ jobs:
       id: cache-deps
       uses: actions/cache@v3
       with:
-        path: ${{github.workspace}}/out/build/${{env.preset}}/vcpkg_installed
-        key: ${{matrix.os}}-${{env.preset}}-${{hashFiles('**/vcpkg.json')}}
+        path: ${{github.workspace}}/out/build/${preset}/vcpkg_installed
+        key: ${{matrix.os}}-${shared_dependency_cache}-${{hashFiles('**/vcpkg.json')}}
         enableCrossOsArchive: true
     
     - name: Integrate vcpkg
       run: vcpkg integrate install
 
     - name: Configure CMake
-      run: cmake --preset ${{env.preset}}
+      run: cmake --preset ${preset}
 
     - name: Build
-      run: cmake --build --preset ${{env.preset}}
+      run: cmake --build --preset ${preset}
 
     - name: Test
-      run: ctest --preset ${{env.preset}}
+      run: ctest --preset ${preset}

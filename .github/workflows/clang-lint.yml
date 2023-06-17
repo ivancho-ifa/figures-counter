@@ -21,6 +21,7 @@ jobs:
 
     env:
       preset: ${{matrix.compiler}}-${{matrix.arch}}-${{env.build_type}}
+      shared_dependency_cache: ${{matrix.arch}}-${{env.build_type}}
 
     steps:
     - uses: actions/checkout@v3
@@ -32,15 +33,15 @@ jobs:
       id: cache-deps
       uses: actions/cache@v3
       with:
-        path: ${{github.workspace}}/out/build/${{env.preset}}/vcpkg_installed
-        key: ${{matrix.os}}-${{env.preset}}-${{hashFiles('**/vcpkg.json')}}
+        path: ${{github.workspace}}/out/build/${preset}/vcpkg_installed
+        key: ${{matrix.os}}-${shared_dependency_cache}-${{hashFiles('**/vcpkg.json')}}
         enableCrossOsArchive: true
     
     - name: Integrate vcpkg
       run: vcpkg integrate install
 
     - name: Configure CMake
-      run: cmake --preset ${{env.preset}}
+      run: cmake --preset ${preset}
 
     - name: Run clang-tidy and clang-format 
       uses: cpp-linter/cpp-linter-action@v2
@@ -50,7 +51,7 @@ jobs:
       with:
         version: 15
         style: file
-        database: out/build/${{env.preset}}
+        database: out/build/${preset}
         thread-comments: true
         step-summary: true
         tidy-checks: ''
