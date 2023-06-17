@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_CASE(SingleCellFigure) {
 
 BOOST_AUTO_TEST_CASE(SimpleFigure) {
 	const std::string m_data = "      *\n"
-						  "      *\n";
+							   "      *\n";
 	std::stringstream m_stream(m_data);
 
 	BOOST_REQUIRE_EQUAL(figures_counter::count_figures(2, 7, m_stream), 1);
@@ -23,12 +23,12 @@ BOOST_AUTO_TEST_CASE(SimpleFigure) {
 
 BOOST_AUTO_TEST_CASE(CircularFigure) {
 	const std::string m_data = "      ***     \n"
-						  "     ** **    \n"
-						  "    **   **   \n"
-						  "    *     *   \n"
-						  "    **   **   \n"
-						  "     ** **    \n"
-						  "      ***     \n";
+							   "     ** **    \n"
+							   "    **   **   \n"
+							   "    *     *   \n"
+							   "    **   **   \n"
+							   "     ** **    \n"
+							   "      ***     \n";
 	std::stringstream m_stream(m_data);
 
 	BOOST_REQUIRE_EQUAL(figures_counter::count_figures(7, 14, m_stream), 1);
@@ -36,12 +36,12 @@ BOOST_AUTO_TEST_CASE(CircularFigure) {
 
 BOOST_AUTO_TEST_CASE(CircularFigureWithRetractions) {
 	const std::string m_data = "*     ***     \n"
-						  "     ** **    \n"
-						  "    **   **   \n"
-						  " ****     *   \n"
-						  " *  **   **   \n"
-						  "     ** **    \n"
-						  "  *   ***     \n";
+							   "     ** **    \n"
+							   "    **   **   \n"
+							   " ****     *   \n"
+							   " *  **   **   \n"
+							   "     ** **    \n"
+							   "  *   ***     \n";
 	std::stringstream m_stream(m_data);
 
 	BOOST_REQUIRE_EQUAL(figures_counter::count_figures(7, 14, m_stream), 3);
