@@ -30,18 +30,18 @@ jobs:
       id: cache-deps
       uses: actions/cache@v3
       with:
-        path: ${{github.workspace}}/out/build/$preset/vcpkg_installed
-        key: ${{matrix.os}}-$shared_dependency_cache-${{hashFiles('**/vcpkg.json')}}
+        path: "${{github.workspace}}/out/build/$preset/vcpkg_installed"
+        key: "${{matrix.os}}-$shared_dependency_cache-${{hashFiles('**/vcpkg.json')}}"
         enableCrossOsArchive: true
     
     - name: Integrate vcpkg
       run: vcpkg integrate install
 
     - name: Configure CMake
-      run: cmake --preset $preset
+      run: cmake --preset "$preset"
 
     - name: Build
-      run: cmake --build --preset $preset
+      run: cmake --build --preset "$preset"
 
     - name: Test
-      run: ctest --preset $preset
+      run: ctest --preset "$preset"
