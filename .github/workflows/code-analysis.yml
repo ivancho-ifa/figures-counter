@@ -21,7 +21,7 @@ jobs:
 
     env:
       preset: ${{matrix.compiler}}-${{matrix.arch}}-${{env.BUILD_TYPE}}
-      shared_dependency_cache: ${{matrix.arch}}-${{env.build_type}}
+      shared_dependency_cache: ${{matrix.arch}}-${{env.BUILD_TYPE}}
 
     steps:
     - uses: actions/checkout@v3

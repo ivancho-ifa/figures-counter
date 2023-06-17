@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ "master" ]
 
-env:
-  VCPKG_ROOT: C:\vcpkg\
-
 jobs:
   test:
     strategy:
@@ -20,8 +17,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      preset: ${{matrix.compiler}}-${{matrix.arch}}-${{env.build_type}}
-      shared_dependency_cache: ${{matrix.arch}}-${{env.build_type}}
+      preset: ${{matrix.compiler}}-${{matrix.arch}}-${{matrix.build_type}}
+      shared_dependency_cache: ${{matrix.arch}}-${{matrix.build_type}}
 
     steps:
     - uses: actions/checkout@v3
