@@ -28,11 +28,15 @@ jobs:
       with:
         arch: ${{matrix.arch}}
         
-    - name: Download CMake results
-      uses: actions/download-artifact@v2
+    - name: Test Cached Builds
+      id: cache-cmake-conf
+      uses: actions/cache@v3
       with:
-        name: build-${{env.preset}}
-        path: ${{env.output_dir}}
+        path: ${{github.workspace}}/out/build/${{env.preset}}
+        key: ${{env.preset}}-${{hashFiles('**/CMakeLists.txt **/CMakePresets.json **/vcpkg.json')}}
+        enableCrossOsArchive: true
+        fail-on-cache-miss: true
+        lookup-only: true
 
     - name: Test
       run: ctest --preset ${{env.preset}}

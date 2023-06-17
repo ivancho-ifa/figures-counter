@@ -35,14 +35,16 @@ jobs:
         key: ${{env.shared_dependency_cache}}-${{hashFiles('**/vcpkg.json')}}
         enableCrossOsArchive: true
     
+    - name: Cache CMake Configuration
+      id: cache-cmake-conf
+      uses: actions/cache@v3
+      with:
+        path: ${{github.workspace}}/out/build/${{env.preset}}
+        key: ${{env.preset}}-${{hashFiles('**/CMakeLists.txt **/CMakePresets.json **/vcpkg.json')}}
+        enableCrossOsArchive: true
+    
     - name: Integrate vcpkg
       run: vcpkg integrate install
 
     - name: Configure CMake
       run: cmake --preset ${{env.preset}}
-
-    - name: Archive CMake results
-      uses: actions/upload-artifact@v2
-      with:
-        name: cmake-configure-${{env.preset}}
-        path: ${{env.output_dir}}
