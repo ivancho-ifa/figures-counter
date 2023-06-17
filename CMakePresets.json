@@ -37,7 +37,7 @@
     {
       "name": "cl-x64-release",
       "displayName": "x64 Release",
-      "inherits": "x64-debug",
+      "inherits": "cl-x64-debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
@@ -45,7 +45,7 @@
     {
       "name": "clang-cl-x64-debug",
       "displayName": "clang-cl x64 Debug",
-      "inherits": "x64-debug",
+      "inherits": "cl-x64-debug",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "clang-cl.exe",
         "CMAKE_CXX_COMPILER": "clang-cl.exe"
@@ -54,7 +54,7 @@
     {
       "name": "clang-cl-x64-release",
       "displayName": "clang-cl x64 Release",
-      "inherits": "x64-release",
+      "inherits": "clang-cl-x64-debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
@@ -63,11 +63,11 @@
   "buildPresets": [
     {
       "name": "cl-x64-debug",
-      "configurePreset": "x64-debug"
+      "configurePreset": "cl-x64-debug"
     },
     {
       "name": "cl-x64-release",
-      "configurePreset": "x64-release"
+      "configurePreset": "cl-x64-release"
     },
     {
       "name": "clang-cl-x64-debug",
