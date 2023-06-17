@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  workflow_run:
+    workflows: [cmake-configure]
+    types:
+      - completed
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [windows-latest]
+        arch: [x64]
+        compiler: [cl, clang-cl]
+        build_type: [debug, release]
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      preset: ${{matrix.compiler}}-${{matrix.arch}}-${{matrix.build_type}}
+      output_dir: ${{github.workspace}}/out/build/${{matrix.compiler}}-${{matrix.arch}}-${{matrix.build_type}}
+      shared_dependency_cache: ${{matrix.os}}-${{matrix.arch}}
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: ${{matrix.arch}}
+        
+    - name: Download CMake results
+      uses: actions/download-artifact@v2
+      with:
+        name: cmake-configure-${{env.preset}}
+        path: ${{env.output_dir}}
+
+    - name: Build
+      run: cmake --build --preset ${{env.preset}}
+
+    - name: Archive CMake results
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-${{env.preset}}
+        path: ${{env.output_dir}}
