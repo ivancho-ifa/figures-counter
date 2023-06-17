@@ -1,6 +1,10 @@
 name: Test
 
 on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
   workflow_run:
     workflows: [build]
     types:
@@ -33,7 +37,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{github.workspace}}/out/build/${{env.preset}}
-        key: ${{env.preset}}-${{hashFiles('**/CMakeLists.txt **/CMakePresets.json **/vcpkg.json')}}
+        key: ${{env.preset}}-${{hashFiles('**/CMakeLists.txt' '**/CMakePresets.json' '**/vcpkg.json')}}
         enableCrossOsArchive: true
         fail-on-cache-miss: true
         lookup-only: true
