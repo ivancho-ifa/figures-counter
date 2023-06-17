@@ -17,9 +17,9 @@ jobs:
     env:
       # For some reason I can not use the already defined variables in env during definition of other variables
       build_config: 'Debug'
-      preset: ${{matrix.compiler}}-${{matrix.arch}}-debug
+      preset: cl-${{matrix.arch}}-debug
       shared_dependency_cache: ${{matrix.os}}-${{matrix.arch}}
-      build_dir: ${{github.workspace}}/out/build/${{matrix.compiler}}-${{matrix.arch}}-debug/
+      build_dir: ${{github.workspace}}/out/build/cl-${{matrix.arch}}-debug/
 
     steps:
     - uses: actions/checkout@v3
