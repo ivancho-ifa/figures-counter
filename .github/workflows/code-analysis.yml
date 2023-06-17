@@ -20,8 +20,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      preset: ${{matrix.compiler}}-${{matrix.arch}}-${{env.BUILD_TYPE}}
-      shared_dependency_cache: ${{matrix.arch}}-${{env.BUILD_TYPE}}
+      preset: ${{matrix.compiler}}-${{matrix.arch}}-${BUILD_TYPE}
+      shared_dependency_cache: ${{matrix.arch}}-${BUILD_TYPE}
 
     steps:
     - uses: actions/checkout@v3
@@ -47,8 +47,8 @@ jobs:
       uses: microsoft/msvc-code-analysis-action@v0.1.1
       id: run-analysis
       with:
-          cmakeBuildDirectory: ${{ env.BUILD_DIR }}/${preset}/
-          buildConfiguration: ${{ env.BUILD_CONFIG }}
+          cmakeBuildDirectory: ${BUILD_DIR}/${preset}/
+          buildConfiguration: ${BUILD_CONFIG}
           ruleset: NativeRecommendedRules.ruleset
           ignoredPaths: ${{ github.workspace }}/out/build/${preset}/vcpkg_installed;${{ github.workspace }}/tests
 

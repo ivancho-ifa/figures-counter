@@ -31,17 +31,17 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{github.workspace}}/out/build/${preset}/vcpkg_installed
-        key: ${{matrix.os}}-${shared_dependency_cache}-${{hashFiles('**/vcpkg.json')}}
+        key: ${{matrix.os}}-${{jobs.test.env.shared_dependency_cache}}-${{hashFiles('**/vcpkg.json')}}
         enableCrossOsArchive: true
     
     - name: Integrate vcpkg
       run: vcpkg integrate install
 
     - name: Configure CMake
-      run: cmake --preset ${preset}
+      run: cmake --preset ${{jobs.test.env.shared_dependency_cache}}
 
     - name: Build
-      run: cmake --build --preset ${preset}
+      run: cmake --build --preset ${{jobs.test.env.shared_dependency_cache}}
 
     - name: Test
-      run: ctest --preset ${preset}
+      run: ctest --preset ${{jobs.test.env.shared_dependency_cache}}
