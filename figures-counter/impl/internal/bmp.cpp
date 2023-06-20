@@ -44,14 +44,12 @@ void validate_bmp_headers(const std::filesystem::path& file_path, std::ifstream&
 		                                   file_path.string()));
 	}
 
-	file.seekg(static_cast<std::streampos>(file_header.pixel_array_offset) +
-	           static_cast<std::streampos>(info_header.size));
+	const std::streampos pixel_array_offset = file_header.pixel_array_offset;
+	file.seekg(pixel_array_offset + static_cast<std::streampos>(info_header.size));
 	if (!file || file.tellg() == std::ifstream::traits_type::pos_type(-1)) {
 		file.seekg(0, std::ifstream::end);
 		const auto end = file.tellg();
-		file.seekg(0, std::ifstream::beg);
-		const auto begin = file.tellg();
-		const auto size = end - begin;
+		const auto size = end - pixel_array_offset;
 		throw error::bad_input(std::format("{} with resolution {} * {} has insufficient pixels count {}",
 		                                   file_path.string(), info_header.width, info_header.height, size));
 	}
