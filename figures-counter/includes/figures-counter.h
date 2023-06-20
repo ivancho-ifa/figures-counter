@@ -6,21 +6,6 @@
 namespace figures_counter {
 
 /**
- * @brief The accepted input values for a cell of the input table
- */
-
-enum class Cell : char {
-	Background = ' ',
-	Figure = '*'
-};
-
-/**
- * @return Whether @p rhs underlying implementation value is @p lhs
- */
-
-bool operator==(char lhs, Cell rhs) noexcept;
-
-/**
  * @brief Returns the number of figures in @p data
  *
  * The input is a table with the contents of @p data, formatted in size @p rows by @p cols. The table's contents @p data

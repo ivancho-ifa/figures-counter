@@ -11,8 +11,4 @@ size_t count_figures(const std::filesystem::path& bmp) {
 	return counter.count_figures();
 }
 
-bool operator==(char lhs, Cell rhs) noexcept {
-	return lhs == static_cast<char>(rhs);
-}
-
 } // namespace figures_counter
