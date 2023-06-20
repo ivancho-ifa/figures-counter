@@ -33,7 +33,7 @@ public:
  * @param[in,out] file Binary input stream in good state
  * @param[out] file_header BMP file header
  * @param[out] info_header BMP file info header
-*/
+ */
 void read_bmp_headers(std::ifstream& file, bmp_file_header& file_header, bmp_info_header& info_header);
 
 /**

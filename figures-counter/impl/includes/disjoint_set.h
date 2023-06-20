@@ -34,13 +34,13 @@ public:
 	/**
 	 * @brief Add the next available ID to a separate set
 	 * @return The new ID
-	*/
+	 */
 	size_t add_new();
 
 private:
 	std::vector<size_t> _parent; ///< Index is child and value is the child's parent
-	std::vector<size_t> _rank; ///< Index is ID and value is its rank
-	size_t _unique_count = 0; ///< Number of unique sets
+	std::vector<size_t> _rank;   ///< Index is ID and value is its rank
+	size_t _unique_count = 0;    ///< Number of unique sets
 };
 
 } // namespace figures_counter

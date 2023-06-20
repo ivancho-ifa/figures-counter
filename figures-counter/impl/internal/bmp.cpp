@@ -44,7 +44,7 @@ void validate_bmp_headers(const std::filesystem::path& file_path, std::ifstream&
 		                                   file_path.string()));
 	}
 
-	file.seekg(file_header.pixel_array_offset + info_header.size);
+	file.seekg(static_cast<std::streampos>(file_header.pixel_array_offset) + info_header.size);
 	if (!file || file.tellg() == std::ifstream::traits_type::pos_type(-1)) {
 		file.seekg(0, std::ifstream::end);
 		const auto end = file.tellg();

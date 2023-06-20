@@ -73,7 +73,8 @@ BOOST_AUTO_TEST_CASE(Unite) {
 
 	// Equivalent sets are {0, 1, 4}, {2, 3}
 	BOOST_REQUIRE(unite_with_equal_ranks(sets, const_1, const_4));
-	BOOST_REQUIRE(unite_expect_parent(sets, const_0, const_4, sets.find_parent(const_4))); // const_4 has higher rank than const_0
+	BOOST_REQUIRE(
+		unite_expect_parent(sets, const_0, const_4, sets.find_parent(const_4))); // const_4 has higher rank than const_0
 	BOOST_REQUIRE(unite_with_equal_ranks(sets, const_2, const_3));
 }
 
@@ -89,9 +90,11 @@ BOOST_AUTO_TEST_CASE(Find) {
 
 	// Equivalent sets are {0, 1, 4}, {2, 3, 6}, {5}
 	BOOST_CHECK(unite_with_equal_ranks(sets, const_1, const_4));
-	BOOST_CHECK(unite_expect_parent(sets, const_0, const_4, sets.find_parent(const_4))); // const_4 has higher rank than const_0
+	BOOST_CHECK(
+		unite_expect_parent(sets, const_0, const_4, sets.find_parent(const_4))); // const_4 has higher rank than const_0
 	BOOST_CHECK(unite_with_equal_ranks(sets, const_2, const_6));
-	BOOST_CHECK(unite_expect_parent(sets, const_6, const_3, sets.find_parent(const_6))); // 6z has higher rank than const_3
+	BOOST_CHECK(
+		unite_expect_parent(sets, const_6, const_3, sets.find_parent(const_6))); // 6z has higher rank than const_3
 
 	// Check groups are as expected
 	const size_t group_1 = sets.find_parent(const_0);
