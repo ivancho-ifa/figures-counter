@@ -10,8 +10,8 @@ namespace figures_counter {
 
 bmp_figures_counter::bmp_figures_counter(const std::filesystem::path& bmp) :
 	lines_stream(bmp),
-	current_line(lines_stream.info_header().width, EMPTY_FIGURE_ID) {
-	prev_line.reserve(lines_stream.info_header().width);
+	current_line(lines_stream.line_length(), EMPTY_FIGURE_ID) {
+	prev_line.reserve(lines_stream.line_length());
 }
 
 size_t bmp_figures_counter::count_figures() {
