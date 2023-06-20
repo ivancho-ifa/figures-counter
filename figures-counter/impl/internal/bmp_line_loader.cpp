@@ -9,21 +9,21 @@
 
 namespace figures_counter {
 
-bmp_line_loader::bmp_line_loader(const std::filesystem::path& bmp) :
-	_bmp_in(bmp, std::ifstream::in | std::ifstream::binary),
+bmp_line_loader::bmp_line_loader(const std::filesystem::path& bmp_file) :
+	_bmp_in(bmp_file, std::ifstream::in | std::ifstream::binary),
 	_lines_loaded(0) {
 	read_bmp_headers(_bmp_in, _file_header, _info_header);
 
 	if (strncmp(_file_header.id, "BM", 2) != 0) [[unlikely]] {
-		throw error::bad_input(std::format("{} is of not supported type {}", bmp.string(), _file_header.id));
+		throw error::bad_input(std::format("{} is of not supported type {}", bmp_file.string(), _file_header.id));
 	}
 
 	if (_info_header.bpp != 8) {
-		throw error::bad_input(std::format("only 8 bpp is supported {} uses {} bpp", bmp.string(), _info_header.bpp));
+		throw error::bad_input(std::format("only 8 bpp is supported {} uses {} bpp", bmp_file.string(), _info_header.bpp));
 	}
 	if (_info_header.compression != 0) {
 		throw error::bad_input(
-			std::format("{} compression method is unsupported, only uncompressed BMPs are supported", bmp.string()));
+			std::format("{} compression method is unsupported, only uncompressed BMPs are supported", bmp_file.string()));
 	}
 
 	_bmp_in.seekg(_file_header.pixel_array_offset + _info_header.size);
@@ -33,7 +33,7 @@ bmp_line_loader::bmp_line_loader(const std::filesystem::path& bmp) :
 		_bmp_in.seekg(0);
 		const auto begin = _bmp_in.tellg();
 		const auto size = end - begin;
-		throw error::bad_input(std::format("{} with resolution {} * {} has insufficient pixels count {}", bmp.string(),
+		throw error::bad_input(std::format("{} with resolution {} * {} has insufficient pixels count {}", bmp_file.string(),
 		                                   _info_header.width, _info_header.height, size));
 	}
 
