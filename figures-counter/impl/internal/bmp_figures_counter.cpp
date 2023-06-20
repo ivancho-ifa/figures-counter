@@ -4,6 +4,7 @@
 #include <figures-counter.h>
 
 #include <algorithm>
+#include <cassert>
 
 namespace figures_counter {
 
@@ -35,7 +36,7 @@ void bmp_figures_counter::assign_figure_ids_for_line(std::span<std::byte> buffer
 		if (cell == BACKGROUND) {
 			left_cell = EMPTY_FIGURE_ID;
 		} else {
-  			const unsigned up_cell = prev_line[col];
+			const unsigned up_cell = prev_line[col];
 			left_cell = get_figure_id_from_neighbors(left_cell, up_cell);
 		}
 
@@ -49,20 +50,24 @@ unsigned bmp_figures_counter::get_figure_id_from_neighbors(unsigned left_cell, u
 		const auto figure_id = figure_ids.add_new();
 		return figure_id;
 	}
+	assert(left_cell != EMPTY_FIGURE_ID || up_cell != EMPTY_FIGURE_ID);
+
+	if (left_cell == EMPTY_FIGURE_ID || up_cell == EMPTY_FIGURE_ID) {
+		const auto& [cell, background] = std::minmax(left_cell, up_cell);
+		return cell;
+	}
+	assert(left_cell != EMPTY_FIGURE_ID && up_cell != EMPTY_FIGURE_ID);
 
 	// Both are part of the same figure
-	if (figure_ids.find(left_cell) == figure_ids.find(up_cell)) {
-		return figure_ids.find(left_cell);
+	const auto left_parent = figure_ids.find_parent(left_cell);
+	const auto up_parent = figure_ids.find_parent(up_cell);
+	if (left_parent == up_parent) {
+		return left_parent;
 	}
+	assert(left_parent != up_parent);
 
 	// Part of different figures
-	if (left_cell != EMPTY_FIGURE_ID && up_cell != EMPTY_FIGURE_ID) {
-		return figure_ids.unite(left_cell, up_cell);
-	}
-
-	// One is background 
-	const auto sorted = std::minmax(left_cell, up_cell);
-	return sorted.first;
+	return figure_ids.unite(left_cell, up_cell);
 }
 
 size_t bmp_figures_counter::count_unique_figure_ids() {

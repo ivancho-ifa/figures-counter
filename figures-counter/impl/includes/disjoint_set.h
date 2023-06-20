@@ -4,73 +4,43 @@
 
 namespace figures_counter {
 
+/**
+ * @brief Disjoint set implementation designed specifically to keep figure IDs.
+ *
+ * Efficiently handles keeping records for equivalent values. Uses union ranking and path compression to keep paths
+ * optimal. Attempts to use minimal memory by keeping IDs in @p std::vector and counting number of sets is constant.
+ */
+
 class disjoint_set {
-	std::unordered_map<int, int> _parent;
-
-	// stores the depth of trees
-	std::unordered_map<int, int> _rank;
-
-	int _uniqueCount = 0;
-
 public:
-	// perform MakeSet operation
-	int count_unique() const {
-		// return uniqueCount;
-		auto count = 0;
-		for (const auto i : _parent) {
-			if (i.first == i.second) {
-				++count;
-			}
-		}
-		return count;
-	}
+	/**
+	 * @return The number of unique IDs.
+	 */
+	size_t count_unique() const noexcept;
 
-	// Find the root of the set in which element `k` belongs
-	int find(int k) {
-		// if `k` is not the root
-		if (_parent[k] != k) {
-			// path compression
-			_parent[k] = find(_parent[k]);
-		}
+	/**
+	 * @brief Finds the parent of element @p child
+	 * @param child The child whose parent is requested
+	 * @return The @p child parent
+	 */
+	size_t find_parent(size_t child);
 
-		return _parent[k];
-	}
+	/**
+	 * @brief Unites the sets which contain @p a and @p b
+	 * @return The parent of the resulting united set
+	 */
+	size_t unite(size_t a, size_t b);
 
-	// Perform Union of two subsets
-	int unite(int a, int b) {
-		// find the root of the sets in which elements `x` and `y` belongs
-		int x = find(a);
-		int y = find(b);
+	/**
+	 * @brief Add the next available ID to a separate set
+	 * @return The new ID
+	*/
+	size_t add_new();
 
-		// if `x` and `y` are present in the same set
-		if (x == y) {
-			return x;
-		}
-
-		--_uniqueCount;
-
-		// Always attach a smaller depth tree under the root of the deeper tree.
-		if (_rank[x] > _rank[y]) {
-			_parent[y] = x;
-			return x;
-		} else if (_rank[x] < _rank[y]) {
-			_parent[x] = y;
-			return y;
-		} else {
-			_parent[x] = y;
-			_rank[y]++;
-			return y;
-		}
-	}
-
-	int add_new() {
-		int i = _parent.size();
-		_parent[i] = i;
-		_rank[i] = 0;
-
-		++_uniqueCount;
-		return i;
-	}
+private:
+	std::vector<size_t> _parent; ///< Index is child and value is the child's parent
+	std::vector<size_t> _rank; ///< Index is ID and value is its rank
+	size_t _unique_count = 0; ///< Number of unique sets
 };
 
 } // namespace figures_counter
