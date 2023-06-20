@@ -1,52 +1,25 @@
 ﻿#pragma once
 
+#include <filesystem>
 #include <istream>
 
 namespace figures_counter {
 
 /**
- * @brief The accepted input values for a cell of the input table
- */
-
-enum class Cell : char {
-	Background = ' ',
-	Figure = '*'
-};
-
-/**
- * @return Whether @p rhs underlying implementation value is @p lhs
- */
-
-bool operator==(char lhs, Cell rhs) noexcept;
-
-/**
- * @brief Returns the number of figures in @p data
+ * @brief Returns the number of figures in the BMP file @p bmp
  *
- * The input is a table with the contents of @p data, formatted in size @p rows by @p cols. The table's contents @p data
- * consists of only two characters - @p EMPTY_CELL and @p FULL_CELL. A figure is consisting of one or more cells with
- * value @p FULL_CELL that share a side. In example 1 there is one figure and in example 2 there are 2 figures.
+ * For more information check @link bmp_figures_counter
  *
- * Ex. 1          Ex. 2
- * | * |          |*  |
- * | * |          | * |
- * |   |          |   |
+ * @param[in] bmp The BMP file with the figures
+ * @param[in] background Which color to recognize as background. Default is white 0xFF
  *
- * @param rows Rows in the table. A positive integer.
- * @param cols Columns in the table. A positive integer.
- * @param data Contents of the table, formatted in @p rows rows with length @p cols. A readable data stream holding @p
- * rows new line separated rows with @p cols length each.
- *
- * @warning Modifying the object referenced by @p data before this method finishes execution will cause undefined
- * behavior.
+ * @warning Modifying the file in @p bmp before this method finishes execution will cause undefined behavior.
  *
  * @return The number of figures in the input.
  *
- * @throws error::row_count_error If @p rows is bigger than the actual rows in @p data
- * @throws error::row_length_error If one of the rows length differs from @p cols
- * @throws error::unrecognized_symbol If a symbol from @p data is different from the ones defined in @p Cell
- * @throws error::bad_input If any of the input parameters is not in the described format
+ * @throws error::bad_input If there's an error while reading the file
  */
 
-size_t count_figures(size_t rows, size_t cols, std::istream& data);
+size_t count_figures(const std::filesystem::path& bmp, std::byte background = std::byte(0xFF));
 
 } // namespace figures_counter

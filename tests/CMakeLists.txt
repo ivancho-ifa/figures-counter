@@ -10,13 +10,22 @@ find_package(Boost REQUIRED COMPONENTS
 # Compile a test executable
 add_executable(${TESTS_EXECUTABLE} 
 	main.cpp
-	bad_input.cpp
 	count_figures.cpp
+	disjoint_set.cpp
+	bmp_line_loader.cpp
+	bmp.cpp
 )
 target_link_libraries(${TESTS_EXECUTABLE} PRIVATE 
 	${PROJECT_LIB}
 	Boost::unit_test_framework
 )
+# Allow testing internal components
+target_include_directories(${TESTS_EXECUTABLE} PRIVATE
+	"../figures-counter/impl/includes"
+)
+
+# Copy test data
+FILE(COPY data/1080p.bmp DESTINATION "${PROJECT_BINARY_DIR}")
 
 # Run the test executable
 enable_testing()
