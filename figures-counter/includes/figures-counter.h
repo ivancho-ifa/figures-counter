@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <istream>
+#include <filesystem>
 
 namespace figures_counter {
 
@@ -48,5 +49,7 @@ bool operator==(char lhs, Cell rhs) noexcept;
  */
 
 size_t count_figures(size_t rows, size_t cols, std::istream& data);
+
+size_t count_figures(const std::filesystem::path& bmp);
 
 } // namespace figures_counter

@@ -11,6 +11,11 @@ size_t count_figures(size_t rows, size_t cols, std::istream& data) {
 	return counter.count_figures();
 }
 
+size_t count_figures(const std::filesystem::path& bmp) {
+	bmp_figures_counter counter(bmp);
+	return counter.count_figures();
+}
+
 bool operator==(char lhs, Cell rhs) noexcept {
 	return lhs == static_cast<char>(rhs);
 }

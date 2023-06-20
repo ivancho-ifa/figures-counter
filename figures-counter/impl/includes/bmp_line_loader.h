@@ -2,15 +2,9 @@
 
 #include <error.h>
 
-// Disable warnings on the external file
-#pragma warning(push)
-#pragma warning(disable : 4996)
-#include <boost/interprocess/file_mapping.hpp>
-#include <boost/interprocess/mapped_region.hpp>
-#pragma warning(pop)
-
 #include <filesystem>
 #include <format>
+#include <fstream>
 #include <span>
 
 namespace figures_counter {
@@ -38,52 +32,111 @@ public:
 	uint32_t important_colors;
 };
 
+static void read_bmp_headers(std::ifstream& file, bmp_file_header& file_header, bmp_info_header& info_header) {
+	// Read the file header
+	file.read(file_header.id, sizeof(file_header.id));
+	file.read(reinterpret_cast<char*>(&file_header.file_size), sizeof(file_header.file_size));
+	file.read(reinterpret_cast<char*>(&file_header.reserved), sizeof(file_header.reserved));
+	file.read(reinterpret_cast<char*>(&file_header.pixel_array_offset), sizeof(file_header.pixel_array_offset));
+
+	// Read the info header
+	file.read(reinterpret_cast<char*>(&info_header.header_size), sizeof(info_header.header_size));
+	file.read(reinterpret_cast<char*>(&info_header.width), sizeof(info_header.width));
+	file.read(reinterpret_cast<char*>(&info_header.height), sizeof(info_header.height));
+	file.read(reinterpret_cast<char*>(&info_header.color_panes), sizeof(info_header.color_panes));
+	file.read(reinterpret_cast<char*>(&info_header.bpp), sizeof(info_header.bpp));
+	file.read(reinterpret_cast<char*>(&info_header.compression), sizeof(info_header.compression));
+	file.read(reinterpret_cast<char*>(&info_header.size), sizeof(info_header.size));
+	file.read(reinterpret_cast<char*>(&info_header.horizontal_resolution), sizeof(info_header.horizontal_resolution));
+	file.read(reinterpret_cast<char*>(&info_header.vertical_resolution), sizeof(info_header.vertical_resolution));
+	file.read(reinterpret_cast<char*>(&info_header.color_palette), sizeof(info_header.color_palette));
+	file.read(reinterpret_cast<char*>(&info_header.important_colors), sizeof(info_header.important_colors));
+}
+
 class bmp_line_loader {
 public:
+	/**
+	 * @throws error::bad_input If any of the input parameters is not in the described format
+	 */
+
 	bmp_line_loader(const std::filesystem::path& bmp) :
-		_file(bmp.c_str(), boost::interprocess::read_only),
-		_file_page(_file, boost::interprocess::read_only, 0, boost::interprocess::mapped_region::get_page_size()),
+		_bmp_in(bmp, std::ifstream::in | std::ifstream::binary),
 		_lines_loaded(0) {
-		const auto* file_header = static_cast<bmp_file_header*>(_file_page.get_address());
-		if (strncmp(file_header->id, "BM", 2) != 0) [[unlikely]] {
-			throw error::bad_input(std::format("{} is of not supported type {}", bmp.string(), file_header->id));
+		read_bmp_headers(_bmp_in, _file_header, _info_header);
+
+		if (strncmp(_file_header.id, "BM", 2) != 0) [[unlikely]] {
+			throw error::bad_input(std::format("{} is of not supported type {}", bmp.string(), _file_header.id));
 		}
 
-		const auto* info_header_begin = static_cast<std::byte*>(_file_page.get_address()) + sizeof(bmp_file_header);
-		const auto* info_header = reinterpret_cast<const bmp_info_header*>(info_header_begin);
-		if (info_header->bpp != 8) {
+		if (_info_header.bpp != 8) {
 			throw error::bad_input(
-				std::format("only 8 bpp is supported {} uses {} bpp", bmp.string(), info_header->bpp));
+				std::format("only 8 bpp is supported {} uses {} bpp", bmp.string(), _info_header.bpp));
 		}
-		if (info_header->compression != 0) {
+		if (_info_header.compression != 0) {
 			throw error::bad_input(std::format(
 				"{} compression method is unsupported, only uncompressed BMPs are supported", bmp.string()));
 		}
 
-		_lines_count = info_header->height;
-		_line_length = info_header->width;
-		_next_row = static_cast<std::byte*>(_file_page.get_address()) + file_header->pixel_array_offset;
-	}
-
-	std::span<const std::byte> load_line() {
-		const auto* const next_row_end = _next_row + _line_length;
-		const auto* const page_end = static_cast<std::byte*>(_file_page.get_address()) + _file_page.get_size();
-		if (next_row_end < page_end) {
-			const std::span<const std::byte> result(_next_row, next_row_end);
-			_next_row = next_row_end;
-			return result;
+		_bmp_in.seekg(_file_header.pixel_array_offset + _info_header.size);
+		if (!_bmp_in || _bmp_in.tellg() == std::ifstream::traits_type::pos_type(-1)) {
+			_bmp_in.seekg(0, std::ifstream::end);
+			const auto end = _bmp_in.tellg();
+			_bmp_in.seekg(0);
+			const auto begin = _bmp_in.tellg();
+			const auto size = end - begin;
+			throw error::bad_input(std::format("{} with resolution {} * {} has insufficient pixels count {}",
+			                                   bmp.string(), _info_header.width, _info_header.height, size));
 		}
 
-		
+		// Move to the start of the pixel data
+		_bmp_in.seekg(_file_header.pixel_array_offset);
+		_buffer.resize(_info_header.width);
+	}
+
+	/**
+	 * @returns the next line from the @p stream
+	 *
+	 * @warning the buffer to which this @p std::string_view points will change on next call to @p load_line
+	 *
+	 * @throws error::row_count_error If @p rows is bigger than the actual rows in @p data
+	 * @throws error::row_length_error If one of the rows length differs from @p cols
+	 */
+
+	std::span<std::byte> load_line() {
+		_bmp_in.read(reinterpret_cast<char*>(_buffer.data()), _buffer.size());
+		if (!_bmp_in) [[unlikely]] {
+			throw error::bad_input("error while reading pixel data from file");
+		}
+		++_lines_loaded;
+		return _buffer;
+	}
+
+	/**
+	 * @returns number of lines already loaded from @p stream
+	 */
+
+	size_t lines_loaded() const noexcept {
+		return _lines_loaded;
+	}
+
+	/**
+	 * @returns whether the expected number of lines are read
+	 */
+
+	bool not_finished() const {
+		return _lines_loaded < _info_header.height;
+	}
+
+	const bmp_info_header& info_header() const noexcept {
+		return _info_header;
 	}
 
 private:
-	boost::interprocess::file_mapping _file;
-	boost::interprocess::mapped_region _file_page;
-	const std::byte* _next_row;
-	[[maybe_unused]] size_t _lines_count;
-	[[maybe_unused]] size_t _line_length;
-	[[maybe_unused]] size_t _lines_loaded;
+	std::ifstream _bmp_in;
+	bmp_file_header _file_header;
+	bmp_info_header _info_header;
+	std::vector<std::byte> _buffer;
+	size_t _lines_loaded;
 };
 
 } // namespace figures_counter

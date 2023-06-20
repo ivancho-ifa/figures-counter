@@ -72,4 +72,13 @@ BOOST_AUTO_TEST_CASE(BigFigureSparsed) {
 	BOOST_REQUIRE_EQUAL(figures_counter::count_figures(rows, cols, m_stream), figures_count);
 }
 
+BOOST_AUTO_TEST_SUITE(BmpFiguresCounter)
+
+BOOST_AUTO_TEST_CASE(CircularFigureWithRetractions) {
+
+	BOOST_REQUIRE_EQUAL(figures_counter::count_figures("1080p.bmp"), 5);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 BOOST_AUTO_TEST_SUITE_END()
