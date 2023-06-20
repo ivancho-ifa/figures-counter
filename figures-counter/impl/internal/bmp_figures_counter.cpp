@@ -29,7 +29,7 @@ size_t bmp_figures_counter::count_figures() {
 
 void bmp_figures_counter::assign_figure_ids_for_line(std::span<std::byte> buffer) {
 	// Cache the left cell in to skip check whether the current cell is 0
-	unsigned left_cell = EMPTY_FIGURE_ID;
+	size_t left_cell = EMPTY_FIGURE_ID;
 
 	for (size_t col = 0; col < buffer.size(); ++col) {
 		const auto cell = buffer[col];
@@ -37,7 +37,7 @@ void bmp_figures_counter::assign_figure_ids_for_line(std::span<std::byte> buffer
 		if (cell == _background) {
 			left_cell = EMPTY_FIGURE_ID;
 		} else {
-			const unsigned up_cell = _prev_line[col];
+			const auto up_cell = _prev_line[col];
 			left_cell = get_figure_id_from_neighbors(left_cell, up_cell);
 		}
 
@@ -45,7 +45,7 @@ void bmp_figures_counter::assign_figure_ids_for_line(std::span<std::byte> buffer
 	}
 }
 
-unsigned bmp_figures_counter::get_figure_id_from_neighbors(unsigned left_cell, unsigned up_cell) {
+size_t bmp_figures_counter::get_figure_id_from_neighbors(size_t left_cell, size_t up_cell) {
 	// Both are empty
 	if (left_cell == EMPTY_FIGURE_ID && up_cell == EMPTY_FIGURE_ID) {
 		const auto figure_id = _figure_ids.add_new();

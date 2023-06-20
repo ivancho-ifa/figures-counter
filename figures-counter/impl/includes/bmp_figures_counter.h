@@ -54,15 +54,15 @@ public:
 	size_t count_figures();
 
 private:
-	static constexpr unsigned EMPTY_FIGURE_ID =
+	static constexpr size_t EMPTY_FIGURE_ID =
 		UINT_MAX; ///< The figure ID for background used when determining neighbor figure IDs.
 
 	void assign_figure_ids_for_line(std::span<std::byte> buffer);
-	unsigned get_figure_id_from_neighbors(unsigned left_cell, unsigned up_cell);
+	size_t get_figure_id_from_neighbors(size_t left_cell, size_t up_cell);
 
 	bmp_line_loader _bmp;                ///< Wrapper around the stream that reads lines of the image one by one
-	std::vector<unsigned> _prev_line;    ///< Holds the figure IDs of the pixels from the previous line
-	std::vector<unsigned> _current_line; ///< Holds the figure IDs of the pixels from the current line
+	std::vector<size_t> _prev_line;    ///< Holds the figure IDs of the pixels from the previous line
+	std::vector<size_t> _current_line; ///< Holds the figure IDs of the pixels from the current line
 	disjoint_set _figure_ids; ///< Holds the relations between figure IDs. Used to check which figure IDs identify the
 	                          ///< same figure.
 	std::byte _background;    ///< Color of the background
