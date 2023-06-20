@@ -1,4 +1,4 @@
-#include <figures-counter.h>
+#include <figures_counter.h>
 
 #include <boost/test/unit_test.hpp>
 

@@ -1,4 +1,4 @@
-#include <figures-counter.h>
+#include <figures_counter.h>
 
 #include <bmp_figures_counter.h>
 
