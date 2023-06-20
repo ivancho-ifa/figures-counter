@@ -1,7 +1,6 @@
 #include <bmp_figures_counter.h>
 
 #include <error.h>
-#include <figures-counter.h>
 
 #include <algorithm>
 #include <cassert>
