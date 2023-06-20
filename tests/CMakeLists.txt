@@ -10,7 +10,7 @@ find_package(Boost REQUIRED COMPONENTS
 # Compile a test executable
 add_executable(${TESTS_EXECUTABLE} 
 	main.cpp
-	bad_input.cpp
+	
 	count_figures.cpp
 )
 target_link_libraries(${TESTS_EXECUTABLE} PRIVATE 

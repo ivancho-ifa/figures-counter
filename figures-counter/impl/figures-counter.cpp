@@ -1,15 +1,10 @@
 #include <figures-counter.h>
 
-#include <sequential_figures_counter.h>
+#include <bmp_figures_counter.h>
 
 #include <limits.h>
 
 namespace figures_counter {
-
-size_t count_figures(size_t rows, size_t cols, std::istream& data) {
-	sequential_figures_counter counter(rows, cols, data);
-	return counter.count_figures();
-}
 
 size_t count_figures(const std::filesystem::path& bmp) {
 	bmp_figures_counter counter(bmp);

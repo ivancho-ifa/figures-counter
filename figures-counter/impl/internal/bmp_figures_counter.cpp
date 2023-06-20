@@ -1,4 +1,4 @@
-#include <sequential_figures_counter.h>
+#include <bmp_figures_counter.h>
 
 #include <error.h>
 #include <figures-counter.h>
@@ -46,18 +46,18 @@ void bmp_figures_counter::assign_figure_ids_for_line(std::span<std::byte> buffer
 unsigned bmp_figures_counter::get_figure_id_from_neighbors(unsigned left_cell, unsigned up_cell) {
 	// Both are empty
 	if (left_cell == EMPTY_FIGURE_ID && up_cell == EMPTY_FIGURE_ID) {
-		const auto figure_id = figure_ids.AddNew();
+		const auto figure_id = figure_ids.add_new();
 		return figure_id;
 	}
 
 	// Both are part of the same figure
-	if (figure_ids.Find(left_cell) == figure_ids.Find(up_cell)) {
-		return figure_ids.Find(left_cell);
+	if (figure_ids.find(left_cell) == figure_ids.find(up_cell)) {
+		return figure_ids.find(left_cell);
 	}
 
 	// Part of different figures
 	if (left_cell != EMPTY_FIGURE_ID && up_cell != EMPTY_FIGURE_ID) {
-		return figure_ids.Union(left_cell, up_cell);
+		return figure_ids.unite(left_cell, up_cell);
 	}
 
 	// One is background 
@@ -66,7 +66,7 @@ unsigned bmp_figures_counter::get_figure_id_from_neighbors(unsigned left_cell, u
 }
 
 size_t bmp_figures_counter::count_unique_figure_ids() {
-	return figure_ids.CountUnique();
+	return figure_ids.count_unique();
 }
 
 } // namespace figures_counter
