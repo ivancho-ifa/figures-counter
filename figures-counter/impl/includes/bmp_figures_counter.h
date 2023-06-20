@@ -59,12 +59,11 @@ private:
 
 	void assign_figure_ids_for_line(std::span<std::byte> buffer);
 	unsigned get_figure_id_from_neighbors(unsigned left_cell, unsigned up_cell);
-	size_t count_unique_figure_ids();
 
-	bmp_line_loader lines_stream;
-	std::vector<unsigned> prev_line;
-	std::vector<unsigned> current_line;
-	disjoint_set figure_ids;
+	bmp_line_loader _bmp;
+	std::vector<unsigned> _prev_line;
+	std::vector<unsigned> _current_line;
+	disjoint_set _figure_ids;
 };
 
 } // namespace figures_counter
