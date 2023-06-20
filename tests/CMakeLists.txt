@@ -10,9 +10,11 @@ find_package(Boost REQUIRED COMPONENTS
 # Compile a test executable
 add_executable(${TESTS_EXECUTABLE} 
 	main.cpp
-	
 	count_figures.cpp
- "disjoint_set.cpp" "bmp_line_loader.cpp")
+	disjoint_set.cpp
+	bmp_line_loader.cpp
+	bmp.cpp
+)
 target_link_libraries(${TESTS_EXECUTABLE} PRIVATE 
 	${PROJECT_LIB}
 	Boost::unit_test_framework

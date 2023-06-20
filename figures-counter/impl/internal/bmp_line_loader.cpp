@@ -47,30 +47,7 @@ void bmp_line_loader::reset() {
 	_lines_loaded = 0;
 
 	read_bmp_headers(_bmp_in, _file_header, _info_header);
-
-	if (strncmp(_file_header.id, "BM", 2) != 0) [[unlikely]] {
-		throw error::bad_input(std::format("{} is of not supported type {}", _bmp_file.string(), _file_header.id));
-	}
-
-	if (_info_header.bpp != 8) {
-		throw error::bad_input(
-			std::format("only 8 bpp is supported {} uses {} bpp", _bmp_file.string(), _info_header.bpp));
-	}
-	if (_info_header.compression != 0) {
-		throw error::bad_input(std::format("{} compression method is unsupported, only uncompressed BMPs are supported",
-		                                   _bmp_file.string()));
-	}
-
-	_bmp_in.seekg(_file_header.pixel_array_offset + _info_header.size);
-	if (!_bmp_in || _bmp_in.tellg() == std::ifstream::traits_type::pos_type(-1)) {
-		_bmp_in.seekg(0, std::ifstream::end);
-		const auto end = _bmp_in.tellg();
-		_bmp_in.seekg(0);
-		const auto begin = _bmp_in.tellg();
-		const auto size = end - begin;
-		throw error::bad_input(std::format("{} with resolution {} * {} has insufficient pixels count {}",
-		                                   _bmp_file.string(), _info_header.width, _info_header.height, size));
-	}
+	validate_bmp_headers(_bmp_file, _bmp_in, _file_header, _info_header);
 
 	// Move to the start of the pixel data
 	_bmp_in.seekg(_file_header.pixel_array_offset);

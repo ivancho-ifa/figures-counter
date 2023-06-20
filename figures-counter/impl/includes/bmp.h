@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <fstream>
 
 namespace figures_counter {
@@ -27,6 +28,22 @@ public:
 	uint32_t important_colors;
 };
 
+/**
+ * @brief Read the BMP headers of a BMP file
+ * @param[in,out] file Binary input stream in good state
+ * @param[out] file_header BMP file header
+ * @param[out] info_header BMP file info header
+*/
 void read_bmp_headers(std::ifstream& file, bmp_file_header& file_header, bmp_info_header& info_header);
+
+/**
+ * @brief Validates BMP file by checking the headers and the pixel data
+ * @param[in] file_path Path to BMP file
+ * @param[in,out] file Binary input file stream of @p file_path
+ * @param[in] file_header BMP file header
+ * @param[in] info_header BMP file info header
+ */
+void validate_bmp_headers(const std::filesystem::path& file_path, std::ifstream& file, bmp_file_header& file_header,
+                          bmp_info_header& info_header);
 
 } // namespace figures_counter
