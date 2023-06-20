@@ -2,6 +2,7 @@
 
 #include <error.h>
 
+#include <cassert>
 #include <filesystem>
 #include <format>
 #include <fstream>
@@ -21,7 +22,9 @@ std::span<std::byte> bmp_line_loader::load_line() {
 		throw error::bad_input(std::format("error while reading pixel data from file {}", _bmp_file.string()));
 	}
 	++_lines_loaded;
-	return _buffer;
+
+	assert(_info_header.width <= _buffer.size());
+	return std::span<std::byte>(_buffer.data(), _info_header.width);
 }
 
 size_t bmp_line_loader::lines_loaded() const noexcept {
@@ -49,9 +52,11 @@ void bmp_line_loader::reset() {
 	read_bmp_headers(_bmp_in, _file_header, _info_header);
 	validate_bmp_headers(_bmp_file, _bmp_in, _file_header, _info_header);
 
+	_padded_line_length = ((size_t(_info_header.bpp) * _info_header.width + 31) / 32) * 4;
+
 	// Move to the start of the pixel data
 	_bmp_in.seekg(_file_header.pixel_array_offset);
-	_buffer.resize(_info_header.width);
+	_buffer.resize(_padded_line_length);
 }
 
 } // namespace figures_counter

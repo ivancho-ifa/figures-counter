@@ -61,6 +61,7 @@ private:
 	std::ifstream _bmp_in;
 	bmp_file_header _file_header;
 	bmp_info_header _info_header;
+	size_t _padded_line_length;
 	std::vector<std::byte> _buffer;
 	size_t _lines_loaded;
 };

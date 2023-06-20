@@ -25,7 +25,7 @@ target_include_directories(${TESTS_EXECUTABLE} PRIVATE
 )
 
 # Copy test data
-FILE(COPY data/1080p.bmp DESTINATION "${PROJECT_BINARY_DIR}")
+FILE(COPY data/ DESTINATION "${PROJECT_BINARY_DIR}")
 
 # Run the test executable
 enable_testing()
