@@ -2,8 +2,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <sstream>
-
 BOOST_AUTO_TEST_SUITE(CountFigures)
 
 BOOST_AUTO_TEST_SUITE(BmpFiguresCounter)
