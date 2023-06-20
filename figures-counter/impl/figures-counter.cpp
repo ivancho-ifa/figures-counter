@@ -6,8 +6,8 @@
 
 namespace figures_counter {
 
-size_t count_figures(const std::filesystem::path& bmp) {
-	bmp_figures_counter counter(bmp);
+size_t count_figures(const std::filesystem::path& bmp, std::byte background) {
+	bmp_figures_counter counter(bmp, background);
 	return counter.count_figures();
 }
 

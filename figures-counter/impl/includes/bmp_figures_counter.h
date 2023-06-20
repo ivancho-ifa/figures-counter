@@ -15,13 +15,14 @@ namespace figures_counter {
  *
  * A figure is consisting of one or more pixels with value different from the background that are in
  * 4-connectivity. In example 1 there is one figure and in example 2 there are 2 figures.
- * 
+ *
  * Ex. 1          Ex. 2
  * | * |          |*  |
  * | * |          | * |
  * |   |          |   |
- * 
- * @warning Currently this class works only with BMP files with 8 bit color depth and no compression. Check 
+ *
+ * @warning Currently this class works only with BMP files with 8 bit color depth and no compression.
+ * @warning This is an internal class don't use directly but through @link figures_counter wrappers
  */
 class bmp_figures_counter final {
 public:
@@ -29,13 +30,15 @@ public:
 	 * @brief Initializes the counter
 	 *
 	 * @param[in] bmp The BMP file with the figures
+	 * @param[in] background Which color to recognize as background
 	 *
 	 * @warning Modifying the file in @p bmp before this method finishes execution will cause undefined behavior.
 	 *
-	 * @throws error::bad_input If there's an error while reading the file. Check @link bmp_line_loader for more info on the errors.
+	 * @throws error::bad_input If there's an error while reading the file. Check @link bmp_line_loader for more info on
+	 * the errors.
 	 */
 
-	bmp_figures_counter(const std::filesystem::path& bmp);
+	bmp_figures_counter(const std::filesystem::path& bmp, std::byte background);
 
 	/**
 	 * Counts the figures in @p bmp
@@ -51,19 +54,18 @@ public:
 	size_t count_figures();
 
 private:
-	/**
-	 * @brief The figure ID for background used when determining neighbor figure IDs.
-	 */
-	static constexpr unsigned EMPTY_FIGURE_ID = UINT_MAX;
-	static constexpr std::byte BACKGROUND{0xFF};
+	static constexpr unsigned EMPTY_FIGURE_ID =
+		UINT_MAX; ///< The figure ID for background used when determining neighbor figure IDs.
 
 	void assign_figure_ids_for_line(std::span<std::byte> buffer);
 	unsigned get_figure_id_from_neighbors(unsigned left_cell, unsigned up_cell);
 
-	bmp_line_loader _bmp;
-	std::vector<unsigned> _prev_line;
-	std::vector<unsigned> _current_line;
-	disjoint_set _figure_ids;
+	bmp_line_loader _bmp;                ///< Wrapper around the stream that reads lines of the image one by one
+	std::vector<unsigned> _prev_line;    ///< Holds the figure IDs of the pixels from the previous line
+	std::vector<unsigned> _current_line; ///< Holds the figure IDs of the pixels from the current line
+	disjoint_set _figure_ids; ///< Holds the relations between figure IDs. Used to check which figure IDs identify the
+	                          ///< same figure.
+	std::byte _background;    ///< Color of the background
 };
 
 } // namespace figures_counter

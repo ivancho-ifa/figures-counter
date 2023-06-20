@@ -8,9 +8,10 @@
 
 namespace figures_counter {
 
-bmp_figures_counter::bmp_figures_counter(const std::filesystem::path& bmp) :
+bmp_figures_counter::bmp_figures_counter(const std::filesystem::path& bmp, std::byte background) :
 	_bmp(bmp),
-	_current_line(_bmp.line_length(), EMPTY_FIGURE_ID) {
+	_current_line(_bmp.line_length(), EMPTY_FIGURE_ID),
+	_background(background) {
 	_prev_line.reserve(_bmp.line_length());
 }
 
@@ -33,7 +34,7 @@ void bmp_figures_counter::assign_figure_ids_for_line(std::span<std::byte> buffer
 	for (size_t col = 0; col < buffer.size(); ++col) {
 		const auto cell = buffer[col];
 
-		if (cell == BACKGROUND) {
+		if (cell == _background) {
 			left_cell = EMPTY_FIGURE_ID;
 		} else {
 			const unsigned up_cell = _prev_line[col];

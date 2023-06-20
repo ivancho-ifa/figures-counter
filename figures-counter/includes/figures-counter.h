@@ -11,6 +11,7 @@ namespace figures_counter {
  * For more information check @link bmp_figures_counter
  *
  * @param[in] bmp The BMP file with the figures
+ * @param[in] background Which color to recognize as background. Default is white 0xFF
  *
  * @warning Modifying the file in @p bmp before this method finishes execution will cause undefined behavior.
  *
@@ -19,6 +20,6 @@ namespace figures_counter {
  * @throws error::bad_input If there's an error while reading the file
  */
 
-size_t count_figures(const std::filesystem::path& bmp);
+size_t count_figures(const std::filesystem::path& bmp, std::byte background = std::byte(0xFF));
 
 } // namespace figures_counter
