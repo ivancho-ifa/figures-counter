@@ -41,10 +41,8 @@ size_t bmp_line_loader::line_length() const noexcept {
 }
 
 void bmp_line_loader::reset() {
-	if (!_bmp_in) {
-		_bmp_in.clear();
-		_bmp_in.seekg(0, std::ios::beg);
-	}
+	_bmp_in.clear();
+	_bmp_in.seekg(0, std::ios::beg);
 
 	_lines_loaded = 0;
 

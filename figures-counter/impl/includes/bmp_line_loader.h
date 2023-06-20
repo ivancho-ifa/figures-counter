@@ -33,26 +33,26 @@ public:
 	/**
 	 * @returns Number of lines already loaded from @p stream
 	 */
-	[[nodiscard]]size_t lines_loaded() const noexcept;
+	[[nodiscard]] size_t lines_loaded() const noexcept;
 
 	/**
 	 * @returns Whether the expected number of lines are read
 	 */
-	bool not_finished() const noexcept;
+	[[nodiscard]] bool not_finished() const noexcept;
 
 	/**
 	 * @return The number of lines expected to be read.
 	 */
-	size_t lines_count() const noexcept;
+	[[nodiscard]] size_t lines_count() const noexcept;
 
 	/**
 	 * @return The length of each line.
 	 */
-	size_t line_length() const noexcept;
+	[[nodiscard]] size_t line_length() const noexcept;
 
 	/**
 	 * @brief Resets the state of this class to the initial state, reading can begin from start.
-	*/
+	 */
 	void reset();
 
 private:
