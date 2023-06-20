@@ -17,6 +17,7 @@ namespace figures_counter {
 class bmp_line_loader {
 public:
 	/**
+	 * @brief A BMP file with no compression and 8-bit color depth.
 	 * @throws error::bad_input If any of the input parameters is not in the described format
 	 */
 	bmp_line_loader(std::filesystem::path bmp_file);

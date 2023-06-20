@@ -8,13 +8,7 @@ namespace figures_counter {
 /**
  * @brief Returns the number of figures in the BMP file @p bmp
  *
- * A figure is consisting of one or more pixels with value different from the background @p ? that are in
- * 4-connectivity. In example 1 there is one figure and in example 2 there are 2 figures.
- *
- * Ex. 1          Ex. 2
- * | * |          |*  |
- * | * |          | * |
- * |   |          |   |
+ * For more information check @link bmp_figures_counter
  *
  * @param[in] bmp The BMP file with the figures
  *
