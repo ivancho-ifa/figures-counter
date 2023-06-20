@@ -23,6 +23,11 @@ target_include_directories(${PROJECT_LIB} PRIVATE
 add_executable (${PROJECT_EXECUTABLE}
 	main.cpp
 )
+
+find_package(Boost REQUIRED COMPONENTS 
+	program_options
+)
 target_link_libraries (${PROJECT_EXECUTABLE}
 	${PROJECT_LIB}
+	Boost::program_options
 )
