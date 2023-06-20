@@ -47,7 +47,8 @@ int main(int argc, char* argv[]) {
 			const size_t figures_count = figures_counter::count_figures(bmp);
 
 			if (!vars.count(COUNT_ONLY)) {
-				std::cout << bmp << " contains " << figures_count << " figures" << "\n";
+				std::cout << bmp << " contains " << figures_count << " figures"
+						  << "\n";
 			} else {
 				std::cout << figures_count << "\n";
 			}
@@ -57,7 +58,7 @@ int main(int argc, char* argv[]) {
 		if (!vars.count(COUNT_ONLY) || !vars.empty()) {
 			std::cout << options << "\n";
 			return EXIT_FAILURE;
-		} 
+		}
 	} catch (const boost::program_options::error& e) {
 		std::cerr << "Failed to parse command line arguments: " << e.what() << "\n";
 	} catch (const figures_counter::error::bad_input& e) {
