@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_run:
+    workflows: [cmake-configure]
+    types:
+      - completed
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [windows-latest]
+        arch: [x64]
+        compiler: [cl, clang-cl]
+        build_type: [debug, release]
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      preset: ${{matrix.compiler}}-${{matrix.arch}}-${{matrix.build_type}}
+      output_dir: ${{github.workspace}}/out/build/${{matrix.compiler}}-${{matrix.arch}}-${{matrix.build_type}}
+      shared_dependency_cache: ${{matrix.os}}-${{matrix.arch}}
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: ${{matrix.arch}}
+        
+    - name: Load Cached CMake Conifguration and Cache Builds
+      id: cache-cmake-conf
+      uses: actions/cache@v3
+      with:
+        path: ${{github.workspace}}/out/build/${{env.preset}}
+        key: ${{env.preset}}-${{hashFiles('**/vcpkg.json')}}-${{hashFiles('**/CMakeLists.txt')}}-${{hashFiles('**/CMakePresets.json')}}
+        enableCrossOsArchive: true
+        fail-on-cache-miss: true
+
+    - name: Build
+      run: cmake --build --preset ${{env.preset}}
