@@ -50,7 +50,7 @@ Several workflows are running on every pull request using GitHub Actions
 
 I've tracked the remaining work in the issues of the project.
 
-The most important improvement of the performance of the project would be efficient reading of the file in memory. After that we can split image in several stripes of memory and iterate each stripe in a new thread and then find which figure IDs are equivalent between neighboring stripes.
+The most important improvement of the performance of the project would be efficient reading of the file in memory. I read about memory mapped files and I think it could be of good use in this case. After that we can split image in several stripes of memory and iterate each stripe in a new thread and then find which figure IDs are equivalent between neighboring stripes.
 
 In terms of usability probably the best thing would be to include multiple image types. Another great feature for usability would be translation of the messages that reach the user.
 
