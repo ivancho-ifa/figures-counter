@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(CountFigures8k) {
 
 BOOST_AUTO_TEST_CASE(Assert4Connectivity) {
 	BOOST_CHECK_EQUAL(figures_counter::count_figures("1-figure-4-connectivity.bmp"), 1);
-	BOOST_CHECK_EQUAL(figures_counter::count_figures("2-figures-4-connectivity.bmp"), 0);
+	BOOST_CHECK_EQUAL(figures_counter::count_figures("2-figures-4-connectivity.bmp"), 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
