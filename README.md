@@ -54,7 +54,7 @@ The most important improvement of the performance of the project would be effici
 
 In terms of usability probably the best thing would be to include multiple image types. Another great feature for usability would be translation of the messages that reach the user.
 
-To ensure the quality of the application a continuos benchmark should be provided. Profiling the code can point to the bottlenecks which can guide to what part of the code should be improved in next iterations. I learned about an interesting testing technique that I'm eager to try - fuzzy testing - providing extreme inputs and describing only classes of output. Helping to find unhandled crashes and bugs. Memory checker should ensure what might have been missed in terms of memory management.
+To ensure the quality of the application a continuos benchmark should be provided. Profiling the code can point to the bottlenecks which can guide to what part of the code should be improved in next iterations. I ran MSVC's profiler locally and found no serious drops in performance. I learned about an interesting testing technique that I'm eager to try - fuzzy testing - providing unexpected random inputs at the software to test how stable it is. Memory checker should ensure what might have been missed in terms of memory management.
 
 ## Running the project
 
