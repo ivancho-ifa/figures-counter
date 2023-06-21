@@ -41,7 +41,6 @@ jobs:
       run: cmake --preset ${{env.preset}}
 
     - name: Run MSVC Code Analysis
-      if: ${{env.preset}} == cl-x64-debug
       uses: microsoft/msvc-code-analysis-action@v0.1.1
       id: run-analysis
       with:
@@ -51,20 +50,17 @@ jobs:
           ignoredPaths: ${{env.build_dir}}/vcpkg_installed;${{ github.workspace }}/tests
 
     - name: Upload SARIF to GitHub
-      if: ${{env.preset}} == cl-x64-debug
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: ${{ steps.run-analysis.outputs.sarif }}
         
     - name: Upload SARIF as an Artifact
-      if: ${{env.preset}} == cl-x64-debug
       uses: actions/upload-artifact@v2
       with:
           name: sarif-file
           path: ${{ steps.run-analysis.outputs.sarif }}
 
     - name: Run clang-tidy and clang-format 
-      if: ${{env.preset}} == cl-x64-debug
       uses: cpp-linter/cpp-linter-action@v2
       id: linter
       env:
